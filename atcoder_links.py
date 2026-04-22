@@ -1,11 +1,16 @@
+import argparse
 import sys
 import requests
 from bs4 import BeautifulSoup
 
 def parse_tasks(html):
     soup = BeautifulSoup(html, "html.parser")
-    # AtCoderの課題テーブルは通常 div.table-responsive 内の table
-    table = soup.find("table")
+    # AtCoderの課題テーブルは通常 id="main-container" 内の table
+    main_container = soup.find(id="main-container")
+    if not main_container:
+        return []
+    
+    table = main_container.find("table")
     if not table:
         return []
     
@@ -25,22 +30,26 @@ def parse_tasks(html):
 
 def fetch_tasks(contest_id):
     url = f"https://atcoder.jp/contests/{contest_id}/tasks"
-    response = requests.get(url)
-    if response.status_code != 200:
-        print(f"Error: Could not fetch tasks for contest '{contest_id}' (Status: {response.status_code})", file=sys.stderr)
+    try:
+        response = requests.get(url, timeout=10)
+        if response.status_code != 200:
+            print(f"Error: Could not fetch tasks for contest '{contest_id}' (Status: {response.status_code})", file=sys.stderr)
+            sys.exit(1)
+        return parse_tasks(response.text)
+    except requests.exceptions.RequestException as e:
+        print(f"Error: Network request failed: {e}", file=sys.stderr)
         sys.exit(1)
-    return parse_tasks(response.text)
 
 def main():
-    if len(sys.argv) < 2:
-        print("Usage: python atcoder_links.py <contest_id>")
-        sys.exit(1)
+    parser = argparse.ArgumentParser(description="Generate Markdown links for AtCoder contest problems.")
+    parser.add_argument("contest_id", help="The ID of the AtCoder contest (e.g., abc300)")
     
-    contest_id = sys.argv[1]
-    tasks = fetch_tasks(contest_id)
+    args = parser.parse_args()
+    
+    tasks = fetch_tasks(args.contest_id)
     
     if not tasks:
-        print(f"No tasks found for contest '{contest_id}'.")
+        print(f"No tasks found for contest '{args.contest_id}'.")
         return
 
     for task in tasks:
