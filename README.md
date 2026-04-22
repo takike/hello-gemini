@@ -1,25 +1,59 @@
 # AtCoder Markdown Link Generator
 
 ## 1. 概要
-指定された AtCoder のコンテストIDから問題一覧を取得し、Markdown形式のリンクを標準出力に表示するCLIツール。
+指定された AtCoder のコンテストIDから問題一覧を取得し、Markdown形式のリンクを標準出力に表示するCLIツールです。
 
-## 2. 実行イメージ
+## 2. インストール方法
+
+このツールを実行するには Python 3.x が必要です。
+
+1. リポジトリをクローンします。
+   ```bash
+   git clone https://github.com/takuyaikemachi/hello-gemini.git
+   cd hello-gemini
+   ```
+
+2. 仮想環境を作成し、有効化します。
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # macOS/Linux
+   # venv\Scripts\activate  # Windows
+   ```
+
+3. 依存ライブラリをインストールします。
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+## 3. 使い方
+
+コンテストIDを指定して実行します。
+
 ```bash
-python atcoder_links.py abc300
+python atcoder_links.py abc345
 ```
 
 **出力結果:**
 ```text
-- [A - N-choice question](https://atcoder.jp/contests/abc300/tasks/abc300_a)
-- [B - Same Map in the RPG World](https://atcoder.jp/contests/abc300/tasks/abc300_b)
+- [A - Tally](https://atcoder.jp/contests/abc345/tasks/abc345_a)
+- [B - Integer Division Returns](https://atcoder.jp/contests/abc345/tasks/abc345_b)
+- [C - One Character Edition](https://atcoder.jp/contests/abc345/tasks/abc345_c)
 ...
 ```
 
-## 3. 主要コンポーネント
-- **CLI引数解析**: `argparse` または `sys.argv` を使用。
-- **HTTPリクエスト**: `requests` を使用してコンテストの `tasks` ページ（例: `https://atcoder.jp/contests/abc300/tasks`）を取得。
-- **HTML解析**: `beautifulsoup4` を使用して問題テーブルから「問題記号（A, B...）」「タイトル」「URL」を抽出。
+## 4. テストの実行
 
-## 4. 考慮事項
-- **エラーハンドリング**: 存在しないコンテストIDが渡された場合の処理（HTTP 404など）。
-- **依存ライブラリ**: `requests`, `beautifulsoup4` のインストールが必要（`requirements.txt` を用意する）。
+`pytest` を使用してテストを実行できます。
+
+```bash
+pytest
+```
+
+## 5. 主要コンポーネント
+- **CLI引数解析**: `sys.argv` を使用。
+- **HTTPリクエスト**: `requests` を使用してコンテストの `tasks` ページを取得。
+- **HTML解析**: `beautifulsoup4` を使用して問題テーブルから情報を抽出。
+
+## 6. 考慮事項
+- **エラーハンドリング**: 存在しないコンテストIDが渡された場合はエラーメッセージを表示して終了します。
+- **依存ライブラリ**: `requests`, `beautifulsoup4`, `pytest` が必要です。
