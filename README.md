@@ -31,21 +31,25 @@
 
 ```bash
 python atcoder_links.py abc345
+
+# 言語を指定する場合（デフォルトは ja）
+python atcoder_links.py abc345 --lang en
 ```
 
 **出力結果:**
 ```text
-- [A - Tally](https://atcoder.jp/contests/abc345/tasks/abc345_a)
+- [A - Leftrightarrow](https://atcoder.jp/contests/abc345/tasks/abc345_a)
 - [B - Integer Division Returns](https://atcoder.jp/contests/abc345/tasks/abc345_b)
 - [C - One Character Edition](https://atcoder.jp/contests/abc345/tasks/abc345_c)
 ...
 ```
 
 ## 今後の改善・既知の課題
-- [ ] `argparse` を導入し、コマンドライン引数の柔軟性を向上（将来的なオプション追加への対応）
-- [ ] ネットワークリクエストにタイムアウトを設定し、ハングアップを防止
-- [ ] HTML解析のセレクタをより具体的にし、サイト構造の変化に対する堅牢性を向上
-- [ ] エラーハンドリングの強化（ネットワークエラー時のリトライや詳細なエラーメッセージ）
+- [x] `argparse` を導入し、コマンドライン引数の柔軟性を向上
+- [x] ネットワークリクエストにタイムアウトを設定し、ハングアップを防止
+- [x] HTML解析のセレクタをより具体的にし、サイト構造の変化に対する堅牢性を向上
+- [x] 言語指定オプション（`--lang`）の追加と、デフォルト日本語化によるタイトル取得の修正
+- [ ] エラーハンドリングのさらなる強化（ネットワークエラー時のリトライ等）
 
 ## 4. テストの実行
 
@@ -56,7 +60,7 @@ pytest
 ```
 
 ## 5. 主要コンポーネント
-- **CLI引数解析**: `sys.argv` を使用。
+- **CLI引数解析**: `argparse` を使用。
 - **HTTPリクエスト**: `requests` を使用してコンテストの `tasks` ページを取得。
 - **HTML解析**: `beautifulsoup4` を使用して問題テーブルから情報を抽出。
 

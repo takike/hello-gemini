@@ -28,10 +28,11 @@ def parse_tasks(html):
                 tasks.append({"label": label, "title": title, "url": url})
     return tasks
 
-def fetch_tasks(contest_id):
+def fetch_tasks(contest_id, lang="ja"):
     url = f"https://atcoder.jp/contests/{contest_id}/tasks"
+    params = {"lang": lang}
     try:
-        response = requests.get(url, timeout=10)
+        response = requests.get(url, params=params, timeout=10)
         if response.status_code != 200:
             print(f"Error: Could not fetch tasks for contest '{contest_id}' (Status: {response.status_code})", file=sys.stderr)
             sys.exit(1)
@@ -43,10 +44,11 @@ def fetch_tasks(contest_id):
 def main():
     parser = argparse.ArgumentParser(description="Generate Markdown links for AtCoder contest problems.")
     parser.add_argument("contest_id", help="The ID of the AtCoder contest (e.g., abc300)")
+    parser.add_argument("--lang", default="ja", help="Language of the problem titles (default: ja)")
     
     args = parser.parse_args()
     
-    tasks = fetch_tasks(args.contest_id)
+    tasks = fetch_tasks(args.contest_id, args.lang)
     
     if not tasks:
         print(f"No tasks found for contest '{args.contest_id}'.")
